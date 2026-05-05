@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BBD Kiosk No.1</title>
+<style>
+:root{
+  --bg:#1A0E12;--sf:#241418;--card:#2E1820;--bd:#915f6d;
+  --pk:#915f6d;--pk-l:#c4919e;--pk-ll:#f2dde1;--pk-s:#3d1f28;
+  --cr:#FAF0DC;--mu:#9a7a83;
+  --ok:#2A9C6A;--ok-s:#1a3d2e;
+  --wa:#C07820;--wa-s:#3d2800;
+  --da:#C04040;--da-s:#3d1010;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--cr);font-family:-apple-system,'Sarabun',sans-serif;font-size:14px;max-width:430px;margin:0 auto;padding-bottom:155px;min-height:100vh}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+.hd{background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 14px;position:sticky;top:0;z-index:100}
+.hd-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.hd-brand{font-size:14px;font-weight:700;color:var(--pk-l)}
+.hd-time{font-size:13px;color:var(--pk-ll);font-weight:700}
+.hd-date{font-size:10px;color:var(--mu)}
+
+.cp-wrap{padding:8px 12px;background:var(--sf);border-bottom:1px solid var(--bd)}
+.cp-sub{font-size:10px;color:var(--mu);margin-bottom:5px}
+.cp-row{display:flex;gap:5px;flex-wrap:wrap}
+.cp-btn{padding:5px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--card);font-size:11px;color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .12s}
+.cp-btn.active{background:var(--pk);color:#fff;border-color:var(--pk);font-weight:600}
+.cp-btn.due{border-color:var(--wa);color:var(--wa)}
+
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd)}
+.sc{background:var(--sf);padding:8px 4px;text-align:center}
+.sv{font-size:18px;font-weight:700;line-height:1;margin-bottom:1px}
+.sl{font-size:9px;color:var(--mu)}
+
+.menu-st{font-size:10px;color:var(--mu);padding:4px 14px;background:var(--sf);border-bottom:1px solid var(--bd);text-align:center;min-height:22px}
+
+.bx{margin:10px 10px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px}
+.bx-row{display:flex;align-items:center;gap:10px}
+.bx-lbl{font-size:11px;color:var(--mu);flex:1;line-height:1.4}
+.bx-in{width:68px;padding:7px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--pk-ll);font-size:18px;font-weight:700;text-align:center}
+.bx-in:focus{outline:none;border-color:var(--pk)}
+.bx-hint{font-size:10px;color:var(--mu);margin-top:5px}
+.bx-hint b{color:var(--wa)}
+
+.sh{display:flex;justify-content:space-between;align-items:center;padding:11px 13px 4px;font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.07em}
+.sb{font-size:10px;padding:1px 8px;border-radius:20px;font-weight:500}
+
+.fl{padding:0 8px;display:flex;flex-direction:column;gap:6px}
+.fc{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s}
+.fc.warn{border-color:var(--wa)}
+.fc.out {border-color:var(--da);opacity:.65}
+.fdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.fi{flex:1;min-width:0}
+.fn{font-size:13px;font-weight:600;color:var(--cr);display:flex;align-items:center;gap:5px;margin-bottom:1px}
+.ff{font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
+.f-ok  {background:var(--ok-s);color:var(--ok)}
+.f-wa  {background:var(--wa-s);color:var(--wa)}
+.f-da  {background:var(--da-s);color:var(--da)}
+.fm{font-size:10px;color:var(--mu)}
+.fbar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-top:4px}
+.fbar-f{height:100%;border-radius:2px;transition:width .3s}
+
+.ri{width:56px;padding:6px 4px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--pk-ll);font-size:16px;font-weight:700;text-align:center;flex-shrink:0}
+.ri:focus{outline:none;border-color:var(--pk)}
+
+.extras{margin:10px 8px 0;display:flex;flex-direction:column;gap:7px}
+.fld{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px}
+.fl-lbl{font-size:11px;font-weight:600;color:var(--pk-l);margin-bottom:6px}
+.fl-sub{font-size:10px;color:var(--wa);margin-left:5px;font-weight:400}
+.pills{display:flex;gap:5px}
+.pill{flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:11px;color:var(--mu);text-align:center;cursor:pointer;transition:all .12s}
+.s-ok  {background:var(--ok-s);color:var(--ok);border-color:var(--ok);font-weight:600}
+.s-wa  {background:var(--wa-s);color:var(--wa);border-color:var(--wa);font-weight:600}
+.s-pk  {background:var(--pk-s);color:var(--pk-l);border-color:var(--pk);font-weight:600}
+.qty-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.qb{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:11px;color:var(--mu);cursor:pointer}
+.qb.sel{background:var(--pk);color:#fff;border-color:var(--pk);font-weight:600}
+.th-hint{font-size:10px;color:var(--mu);margin-top:5px}
+textarea{width:100%;padding:7px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;resize:none;height:56px;font-family:inherit}
+textarea:focus{outline:none;border-color:var(--pk)}
+
+.acts{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--sf);border-top:1px solid var(--bd);padding:9px 10px;display:flex;flex-direction:column;gap:6px;z-index:100}
+.btn{width:100%;padding:12px;border-radius:12px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .12s,transform .1s}
+.btn:active{opacity:.7;transform:scale(.98)}
+.btn-m{background:var(--pk);color:#fff;font-size:15px}
+.btn-r{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.btn-s{background:var(--card);color:var(--pk-l);border:1px solid var(--bd);font-size:12px}
+.btn-d{background:var(--card);color:var(--mu);border:1px solid var(--bd);font-size:12px}
+
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:flex-end}
+.ov.open{display:flex}
+.modal{background:var(--sf);border-radius:18px 18px 0 0;border-top:1px solid var(--bd);padding:16px 13px 32px;width:100%;max-height:85vh;overflow-y:auto}
+.mo-ttl{font-size:14px;font-weight:700;color:var(--pk-l);margin-bottom:2px}
+.mo-sub{font-size:11px;color:var(--mu);margin-bottom:11px}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px}
+.rr:last-of-type{border-bottom:none}
+.rr-name{color:var(--cr)}
+.rr-r{display:flex;gap:8px;align-items:center}
+.rr-val{font-weight:700;color:var(--pk-ll)}
+.rr-flag{font-size:10px;padding:1px 6px;border-radius:20px}
+.tot{display:flex;justify-content:space-between;padding:8px 0 0;font-size:13px;font-weight:700;border-top:1px solid var(--bd);margin-top:4px}
+.cbox{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;font-size:10px;color:var(--mu);margin-top:9px;white-space:pre-wrap;font-family:monospace;line-height:1.7}
+.mo-cl{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:var(--pk);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+
+.toast{position:fixed;bottom:170px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--pk);color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:600;transition:all .3s;z-index:999;white-space:nowrap;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <div class="hd-top">
+    <div class="hd-brand">BBD — Kiosk No.1</div>
+    <div class="hd-time" id="liveTime"></div>
+  </div>
+  <div class="hd-date" id="liveDate"></div>
+</div>
+
+<div class="cp-wrap">
+  <div class="cp-sub">รอบรายงาน</div>
+  <div class="cp-row" id="cpRow"></div>
+</div>
+
+<div class="strip">
+  <div class="sc"><div class="sv" id="sumB" style="color:var(--pk-ll)">—</div><div class="sl">รับมาเช้า</div></div>
+  <div class="sc"><div class="sv" id="sumL" style="color:var(--wa)">—</div><div class="sl">เหลือรวม</div></div>
+  <div class="sc"><div class="sv" id="sumS" style="color:var(--ok)">0</div><div class="sl">ขายแล้ว</div></div>
+  <div class="sc"><div class="sv" id="sumP" style="color:var(--cr)">—</div><div class="sl">sell-thru</div></div>
+</div>
+
+<div class="menu-st" id="menuSt"></div>
+
+<div class="bx">
+  <div class="bx-row">
+    <div class="bx-lbl">จำนวนรับจากครัวทั้งหมด<br><small>บวกอัตโนมัติจากรอบ 10:00 เท่านั้น · ล็อกไว้ตลอดวัน</small></div>
+    <div class="bx-in" id="bIn" style="display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--pk-ll);background:var(--sf);border:1px solid var(--bd);border-radius:8px;width:68px;padding:7px;text-align:center">—</div>
+  </div>
+  <div class="bx-hint" id="bHint"></div>
+</div>
+
+<div class="sh">เมนูประจำ<span class="sb" style="background:var(--ok-s);color:var(--ok)">5 รส</span></div>
+<div class="fl" id="coreList"></div>
+
+<div class="sh">เมนูหมุน — สัปดาห์นี้<span class="sb" id="rotBadge" style="background:var(--wa-s);color:var(--wa)">—</span></div>
+<div class="fl" id="rotList"></div>
+
+<div id="dropSec" style="display:none">
+  <div class="sh">Weekend Drop<span class="sb" id="dropBadge" style="background:var(--pk-s);color:var(--pk-l)">Limited</span></div>
+  <div class="fl" id="dropList"></div>
+</div>
+
+<div class="extras">
+  <div class="fld">
+    <div class="fl-lbl">ลูกค้า ณ เวลานี้</div>
+    <div class="pills">
+      <div class="pill" data-g="tr" data-v="คนเยอะมาก" onclick="setPill(this,'s-ok')">เยอะมาก</div>
+      <div class="pill" data-g="tr" data-v="ปกติ"       onclick="setPill(this,'s-pk')">ปกติ</div>
+      <div class="pill" data-g="tr" data-v="น้อย"       onclick="setPill(this,'s-wa')">น้อย</div>
+    </div>
+    <div class="th-hint" id="trHint"></div>
+  </div>
+
+  <div class="fld" id="b2Card" style="display:none">
+    <div class="fl-lbl">ต้องการสั่งโดนัทมาเพิ่มไหม<span class="fl-sub">ตัดสินใจก่อน 14:00</span></div>
+    <div class="pills">
+      <div class="pill" data-g="b2" data-v="ต้องการ" onclick="setPill(this,'s-ok')">ต้องการ</div>
+      <div class="pill" data-g="b2" data-v="ไม่ต้อง" onclick="setPill(this,'s-wa')">ไม่ต้อง</div>
+      <div class="pill" data-g="b2" data-v="รอดู"   onclick="setPill(this,'s-pk')">รอดู</div>
+    </div>
+    <div class="qty-row" id="qtyRow" style="display:none">
+      <div style="font-size:11px;color:var(--mu);width:100%">สั่งกี่ชิ้น</div>
+      <div class="qb" data-q="25" onclick="setQty(this)">25</div>
+      <div class="qb" data-q="30" onclick="setQty(this)">30</div>
+      <div class="qb" data-q="40" onclick="setQty(this)">40</div>
+      <div class="qb" data-q="50" onclick="setQty(this)">50</div>
+    </div>
+  </div>
+
+  <div class="fld">
+    <div class="fl-lbl">บันทึก</div>
+    <textarea id="obs" placeholder="เช่น ลูกค้าถาม pistachio · sampling หมดเร็ว · display ล้ม"></textarea>
+  </div>
+</div>
+
+<div class="acts">
+  <button class="btn btn-m" onclick="submit()">ส่งรายงาน</button>
+  <div class="btn-r">
+    <button class="btn btn-s" onclick="openRpt()">ดูรายงาน</button>
+    <button class="btn btn-d" onclick="doReset()">รีเซ็ตวันใหม่</button>
+  </div>
+</div>
+
+<div class="ov" id="ov" onclick="closeOv(event)">
+  <div class="modal">
+    <div class="mo-ttl">รายงาน Kiosk No.1</div>
+    <div class="mo-sub" id="moSub"></div>
+    <div id="moRows"></div>
+    <div class="tot" style="color:var(--pk-ll)"><span>เหลือรวม</span><span id="totL"></span></div>
+    <div class="tot" style="color:var(--ok);font-size:12px"><span>ขายแล้ว</span><span id="totS"></span></div>
+    <div class="cbox" id="cbox"></div>
+    <button class="mo-cl" onclick="closeOv()">ปิด</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SHEETS_URL="YOUR_WEB_APP_URL_HERE";
+var MENU_URL  ="YOUR_WEB_APP_URL_HERE";
+
+// flag thresholds
+var T_OK=15, T_WARN=7, T_CRIT=3; // >15 ปกติ · 7-15 เหลือน้อย · <3 เหลือน้อยมาก · 0 หมด
+
+var CPS=[
+  {id:"c1",lbl:"10:00",note:"เปิดร้าน"},
+  {id:"c2",lbl:"14:00",note:"ตัดสินใจสั่งโดนัทเพิ่มก่อน 14:00",b2:true},
+  {id:"c3",lbl:"16:45",note:"รอบบ่าย"},
+  {id:"c4",lbl:"19:00",note:"ช่วงครอบครัว"},
+  {id:"c5",lbl:"21:00",note:"ปิดร้าน"},
+];
+
+var MENU={
+  core:[
+    {id:"honey",  name:"Honey Glazed",       price:45,color:"#C88020",type:"ring"},
+    {id:"berry",  name:"Boraberry",           price:79,color:"#C060A0",type:"filled"},
+    {id:"straw",  name:"Strawberry CC",       price:79,color:"#E04060",type:"filled"},
+    {id:"ganache",name:"Ganache Au Chocolat", price:79,color:"#6B3A1F",type:"filled"},
+    {id:"shio",   name:"Messy Shio Brown",    price:79,color:"#C0A040",type:"filled"},
+  ],
+  rotating:[
+    {id:"rot1",name:"Pink Rainbow",  price:55,color:"#E080B0",type:"ring"},
+    {id:"rot2",name:"Chocolate Ring",price:55,color:"#4A2A10",type:"ring"},
+    {id:"rot3",name:"Super Lemon",   price:79,color:"#D0C020",type:"filled"},
+  ],
+  drop:[
+    {id:"drop1",name:"No.29 Cheese Brulee",price:79,color:"#F0C040",type:"filled"},
+  ],
+};
+
+var S=load(),curCP=CPS[0],curTr="",curB2="",curQty="";
+
+function load(){try{var s=JSON.parse(localStorage.getItem("bbd4")||"{}");if(s.date!==new Date().toDateString())return fresh();return s;}catch(e){return fresh();}}
+function fresh(){return{date:new Date().toDateString(),rem:{},batch:0};}
+function save(){localStorage.setItem("bbd4",JSON.stringify(S));}
+
+function tick(){
+  var n=new Date();
+  var days=["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัส","ศุกร์","เสาร์"];
+  var mo=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  el("liveDate").textContent="วัน"+days[n.getDay()]+" "+n.getDate()+" "+mo[n.getMonth()]+" "+(n.getFullYear()+543);
+  el("liveTime").textContent=p2(n.getHours())+":"+p2(n.getMinutes());
+  document.querySelectorAll(".cp-btn").forEach(function(b,i){
+    var t=CPS[i].lbl.split(":").map(Number);
+    var m=n.getHours()*60+n.getMinutes(),tm=t[0]*60+t[1];
+    b.classList.toggle("due",Math.abs(m-tm)<=15);
+  });
+}
+function p2(x){return String(x).padStart(2,"0");}
+function el(id){return document.getElementById(id);}
+setInterval(tick,15000);
+
+function renderCPs(){
+  var w=el("cpRow");w.innerHTML="";
+  CPS.forEach(function(cp,i){
+    var b=document.createElement("div");
+    b.className="cp-btn"+(i===0?" active":"");
+    b.textContent=cp.lbl;b.title=cp.note||"";
+    b.onclick=function(){
+      document.querySelectorAll(".cp-btn").forEach(function(e){e.classList.remove("active");});
+      b.classList.add("active");curCP=cp;
+      el("b2Card").style.display=cp.b2?"":"none";
+    };
+    w.appendChild(b);
+  });
+  el("b2Card").style.display="none";
+}
+
+function all(){return MENU.core.concat(MENU.rotating).concat(MENU.drop);}
+
+function getFlag(rem){
+  if(rem===null||rem===undefined) return{cls:"f-ok",txt:"—"};
+  if(rem<=0)       return{cls:"f-da",txt:"หมด"};
+  if(rem<T_CRIT)   return{cls:"f-wa",txt:"เหลือน้อยมาก"};
+  if(rem<=T_OK)    return{cls:"f-wa",txt:"เหลือน้อย"};
+  return{cls:"f-ok",txt:"ปกติ"};
+}
+
+function renderMenus(){
+  renderList("coreList",MENU.core);
+  renderList("rotList",MENU.rotating);
+  el("rotBadge").textContent=MENU.rotating.length+" รส";
+  var wd=[5,6,0].includes(new Date().getDay());
+  el("dropSec").style.display=wd&&MENU.drop.length?"":"none";
+  if(wd&&MENU.drop.length){renderList("dropList",MENU.drop);el("dropBadge").textContent=MENU.drop.length+" รส";}
+}
+
+function renderList(listId,items){
+  var list=el(listId);if(!list)return;list.innerHTML="";
+  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
+  items.forEach(function(item){
+    var rem=S.rem[item.id]!==undefined?S.rem[item.id]:(per||null);
+    var f=getFlag(rem),pct=per>0&&rem!==null?Math.min(rem/per,1):0;
+    var c=document.createElement("div");
+    c.className="fc"+(rem===0?" out":(rem!==null&&rem<=T_OK?" warn":""));
+    c.id="fc_"+item.id;
+    c.innerHTML=
+      '<div class="fdot" style="background:'+item.color+'"></div>'+
+      '<div class="fi">'+
+        '<div class="fn">'+item.name+'<span class="ff '+f.cls+'" id="ff_'+item.id+'">'+f.txt+'</span></div>'+
+        '<div class="fm">฿'+item.price+' · '+item.type+'</div>'+
+        '<div class="fbar"><div class="fbar-f" id="fb_'+item.id+'" style="width:'+Math.round(pct*100)+'%;background:'+item.color+'"></div></div>'+
+      '</div>'+
+      '<input class="ri" id="ri_'+item.id+'" type="number" inputmode="numeric"'+
+        ' value="'+(rem!==null?rem:'')+'" placeholder="?" oninput="onRem(\''+item.id+'\',this.value)">';
+    list.appendChild(c);
+  });
+}
+
+function onRem(id,val){
+  var v=val===""?null:Math.max(0,parseInt(val)||0);
+  S.rem[id]=v;save();
+  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
+  var f=getFlag(v),pct=per>0&&v!==null?Math.min(v/per,1):0;
+  var card=el("fc_"+id),flag=el("ff_"+id),bar=el("fb_"+id);
+  if(card) card.className="fc"+(v===0?" out":(v!==null&&v<=T_OK?" warn":""));
+  if(flag){flag.className="ff "+f.cls;flag.textContent=f.txt;}
+  if(bar)  bar.style.width=Math.round(pct*100)+"%";
+  if(curCP.id==="c1") // แสดง batch ที่ lock ไว้ (ถ้ามี)
+var _locked=S.batchLocked||S.batch||0;
+el("bIn").textContent=_locked||"—";
+if(_locked) el("bHint").innerHTML='ยอดรับจากรอบ 10:00: <b>'+_locked+'</b> ชิ้น (ล็อกแล้ว)';
+calcSummary();
+  calcSummary();
+}
+
+function onBatch(){
+  // ถ้ารอบ 10:00 → คำนวณ batch จาก sum rem แล้ว lock ไว้
+  // รอบอื่น → ใช้ค่า batch ที่ lock ไว้จากรอบ 10:00 เสมอ
+  if(curCP.id==="c1"){
+    var tot=0,hasAny=false;
+    all().forEach(function(item){
+      var r=S.rem[item.id];
+      if(r!==null&&r!==undefined){tot+=parseInt(r)||0;hasAny=true;}
+    });
+    if(hasAny){S.batch=tot;S.batchLocked=tot;save();}
+    el("bIn").textContent=hasAny?tot:"—";
+    if(hasAny) el("bHint").innerHTML='รับมาทั้งหมด <b>'+tot+'</b> ชิ้น &nbsp;·&nbsp; batch พรุ่งนี้แนะนำ ~<b>'+Math.round(tot*1.2)+'</b> ชิ้น';
+    else el("bHint").innerHTML="กรอกจำนวนแต่ละรสด้านล่างก่อน";
+  } else {
+    // รอบอื่น — แสดง locked batch จากรอบ 10:00 เท่านั้น
+    var locked=S.batchLocked||S.batch||0;
+    el("bIn").textContent=locked||"—";
+    if(locked) el("bHint").innerHTML='ยอดรับจากรอบ 10:00: <b>'+locked+'</b> ชิ้น (ล็อกแล้ว)';
+    else el("bHint").innerHTML="ยังไม่มีข้อมูลรอบ 10:00";
+  }
+  calcSummary();
+}
+
+function calcSummary(){
+  var totRem=0,has=false;
+  all().forEach(function(item){var r=S.rem[item.id];if(r!==null&&r!==undefined){totRem+=parseInt(r)||0;has=true;}});
+  var locked=S.batchLocked||S.batch||0;
+  var sold=locked>0&&has?Math.max(locked-totRem,0):0;
+  var pct=locked>0&&has?Math.round(sold/locked*100)+"%":"—";
+  el("sumB").textContent=locked||"—";
+  el("sumL").textContent=has?totRem:"—";
+  el("sumS").textContent=sold||"—";
+  el("sumP").textContent=pct;
+  if(has){el("sumL").style.color=totRem<10?"var(--da)":totRem<25?"var(--wa)":"var(--pk-ll)";}
+}
+
+var TH={
+  "คนเยอะมาก":"เพิ่ม sampling · ตรวจ stock ทุก 15 นาที",
+  "ปกติ":"รอบปกติ",
+  "น้อย":"เพิ่ม sampling · approach คนยืนดู · ตรวจ display"
+};
+
+function setPill(el_,selCls){
+  var g=el_.dataset.g,v=el_.dataset.v;
+  document.querySelectorAll(".pill[data-g='"+g+"']").forEach(function(e){
+    e.className=e.className.replace(/s-\w+/g,"").trim();
+  });
+  el_.classList.add(selCls);
+  if(g==="tr"){curTr=v;el("trHint").textContent=TH[v]||"";}
+  if(g==="b2"){curB2=v;el("qtyRow").style.display=v==="ต้องการ"?"flex":"none";if(v!=="ต้องการ")curQty="";}
+}
+
+function setQty(el_){
+  document.querySelectorAll(".qb").forEach(function(e){e.classList.remove("sel");});
+  el_.classList.add("sel");curQty=el_.dataset.q;
+}
+
+function buildRpt(){
+  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
+  var totR=0,totS=0,rows=[];
+  all().forEach(function(item){
+    var rem=S.rem[item.id]!==null&&S.rem[item.id]!==undefined?S.rem[item.id]:per;
+    var sold=per>0?Math.max(per-rem,0):0;
+    totR+=rem;totS+=sold;
+    rows.push({name:item.name,rem:rem,sold:sold,color:item.color});
+  });
+  return{rows:rows,totR:totR,totS:totS,batch:batch};
+}
+
+function openRpt(){
+  var d=buildRpt();
+  el("moSub").textContent=el("liveDate").textContent+" · "+curCP.lbl;
+  var html="";
+  d.rows.forEach(function(r){
+    var f=getFlag(r.rem);
+    html+='<div class="rr"><span class="rr-name">'+r.name+'</span>'+
+      '<div class="rr-r"><span class="rr-val">เหลือ '+r.rem+'</span>'+
+      '<span class="rr-flag '+f.cls+'">'+f.txt+'</span></div></div>';
+  });
+  el("moRows").innerHTML=html;
+  el("totL").textContent=d.totR+" ชิ้น";
+  el("totS").textContent=d.totS+" ชิ้น";
+  var pct=d.batch>0?Math.round(d.totS/d.batch*100)+"%":"—";
+  var txt="รายงาน BBD Kiosk No.1\n";
+  txt+=el("liveDate").textContent+" · "+curCP.lbl+"\n";
+  txt+="─────────────────\n";
+  d.rows.forEach(function(r){
+    var mk=r.rem===0?"[หมด]":r.rem<T_CRIT?"[น้อยมาก]":r.rem<=T_OK?"[น้อย]":"[ปกติ]";
+    txt+="- "+r.name+": เหลือ "+r.rem+" ชิ้น "+mk+"\n";
+  });
+  txt+="─────────────────\n";
+  txt+="เหลือรวม: "+d.totR+" | ขาย: "+d.totS+" | sell-thru: "+pct+"\n";
+  if(curTr) txt+="ลูกค้า: "+curTr+"\n";
+  if(curB2) txt+="Batch 2: "+curB2+(curQty?" ("+curQty+" ชิ้น)":"")+"\n";
+  var obs=el("obs").value;
+  if(obs) txt+="บันทึก: "+obs+"\n";
+  txt+="batch พรุ่งนี้แนะนำ: ~"+Math.round(d.totS*1.2)+" ชิ้น";
+  el("cbox").textContent=txt;
+  el("ov").classList.add("open");
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).catch(function(){});
+  return txt;
+}
+
+function closeOv(e){if(!e||e.target===el("ov"))el("ov").classList.remove("open");}
+
+function submit(){
+  var d=buildRpt(),txt=openRpt();
+  if(!SHEETS_URL||SHEETS_URL.includes("YOUR_")){toast("Copy แล้ว — วาง LINE ได้เลย");return;}
+  var btn=document.querySelector(".btn-m");
+  btn.textContent="กำลังส่ง...";btn.disabled=true;
+  fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({date:el("liveDate").textContent,time:el("liveTime").textContent,
+      checkpoint:curCP.lbl,batchReceived:d.batch,totalSold:d.totS,totalRemaining:d.totR,
+      sellThrough:d.batch>0?Math.round(d.totS/d.batch*100):0,remaining:S.rem,
+      traffic:curTr,batch2Decision:curB2,batch2Qty:curQty,
+      observation:el("obs").value,tomorrowBatch:Math.round(d.totS*1.2),
+      skuDetail:d.rows.map(function(r){return r.name+":"+r.rem;}).join(", ")})
+  }).then(function(){
+    toast("ส่ง Sheets แล้ว");
+    btn.textContent="ส่งแล้ว · "+curCP.lbl;
+    setTimeout(function(){btn.textContent="ส่งรายงาน";btn.disabled=false;},3500);
+  }).catch(function(){toast("Copy แล้ว — วาง LINE ได้เลย");btn.textContent="ส่งรายงาน";btn.disabled=false;});
+}
+
+function doReset(){
+  if(confirm("รีเซ็ตทุกตัวนับ? ทำเมื่อเริ่มวันใหม่เท่านั้น")){
+    S=fresh();save();
+    el("bIn").value="";el("obs").value="";
+    document.querySelectorAll(".pill,.qb").forEach(function(e){
+      e.className=e.className.replace(/s-\w+/g,"").replace(/sel/g,"").trim();
+    });
+    curTr="";curB2="";curQty="";
+    renderMenus();calcSummary();toast("รีเซ็ตเรียบร้อย");
+  }
+}
+
+function toast(msg){
+  var t=el("toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(function(){t.classList.remove("show");},2600);
+}
+
+function fetchMenu(){
+  if(!MENU_URL||MENU_URL.includes("YOUR_")){el("menuSt").textContent="เมนู default";return;}
+  el("menuSt").textContent="กำลังโหลดเมนู...";
+  fetch(MENU_URL+"?action=menu").then(function(r){return r.json();})
+    .then(function(data){
+      if(data.core&&data.core.length){
+        MENU.core=data.core;MENU.rotating=data.rotating||[];MENU.drop=data.drop||[];
+        renderMenus();calcSummary();el("menuSt").textContent="เมนูอัปเดทแล้ว";
+      }
+    }).catch(function(){el("menuSt").textContent="เมนู default";});
+}
+
+tick();renderCPs();renderMenus();calcSummary();
+onBatch();
+fetchMenu();
+setInterval(fetchMenu,5*60*1000);
+</script>
+</body>
+</html>
