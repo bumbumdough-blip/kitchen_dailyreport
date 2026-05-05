@@ -3,204 +3,285 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>BBD Kiosk No.1</title>
+<title>BBD — ครัว</title>
 <style>
 :root{
-  --bg:#1A0E12;--sf:#241418;--card:#2E1820;--bd:#915f6d;
-  --pk:#915f6d;--pk-l:#c4919e;--pk-ll:#f2dde1;--pk-s:#3d1f28;
-  --cr:#FAF0DC;--mu:#9a7a83;
-  --ok:#2A9C6A;--ok-s:#1a3d2e;
+  --bg:#0A0F0A;--sf:#121A12;--card:#1A251A;--bd:#3A5A3A;
+  --gr:#4A8C5A;--gr-l:#7CC090;--gr-ll:#C8E8D0;--gr-s:#1A3020;
+  --cr:#F0F8F0;--mu:#6A8A6A;
+  --ok:#4A8C5A;--ok-s:#1A3020;
   --wa:#C07820;--wa-s:#3d2800;
   --da:#C04040;--da-s:#3d1010;
+  --pu:#7060C0;--pu-s:#1A1830;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--cr);font-family:-apple-system,'Sarabun',sans-serif;font-size:14px;max-width:430px;margin:0 auto;padding-bottom:155px;min-height:100vh}
+body{background:var(--bg);color:var(--cr);font-family:-apple-system,'Sarabun',sans-serif;font-size:14px;max-width:430px;margin:0 auto;padding-bottom:160px;min-height:100vh}
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
-.hd{background:var(--sf);border-bottom:1px solid var(--bd);padding:10px 14px;position:sticky;top:0;z-index:100}
+/* HEADER */
+.hd{background:var(--sf);border-bottom:2px solid var(--bd);padding:10px 14px;position:sticky;top:0;z-index:100}
 .hd-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
-.hd-brand{font-size:14px;font-weight:700;color:var(--pk-l)}
-.hd-time{font-size:13px;color:var(--pk-ll);font-weight:700}
-.hd-date{font-size:10px;color:var(--mu)}
+.hd-brand{font-size:15px;font-weight:700;color:var(--gr-l)}
+.hd-time{font-size:13px;color:var(--gr-ll);font-weight:700}
+.hd-sub{font-size:10px;color:var(--mu)}
+.store-wrap{padding:7px 12px;background:var(--sf);border-bottom:1px solid var(--bd)}
 
-.cp-wrap{padding:8px 12px;background:var(--sf);border-bottom:1px solid var(--bd)}
-.cp-sub{font-size:10px;color:var(--mu);margin-bottom:5px}
-.cp-row{display:flex;gap:5px;flex-wrap:wrap}
-.cp-btn{padding:5px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--card);font-size:11px;color:var(--mu);cursor:pointer;white-space:nowrap;transition:all .12s}
-.cp-btn.active{background:var(--pk);color:#fff;border-color:var(--pk);font-weight:600}
-.cp-btn.due{border-color:var(--wa);color:var(--wa)}
+/* TAB */
+.tabs{display:flex;background:var(--sf);border-bottom:1px solid var(--bd)}
+.tab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;color:var(--mu);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s}
+.tab.active{color:var(--gr-l);border-bottom-color:var(--gr)}
 
-.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd)}
+/* PAGE */
+.page{display:none}.page.active{display:block}
+
+/* STRIP */
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bd)}
 .sc{background:var(--sf);padding:8px 4px;text-align:center}
 .sv{font-size:18px;font-weight:700;line-height:1;margin-bottom:1px}
 .sl{font-size:9px;color:var(--mu)}
 
-.menu-st{font-size:10px;color:var(--mu);padding:4px 14px;background:var(--sf);border-bottom:1px solid var(--bd);text-align:center;min-height:22px}
-
-.bx{margin:10px 10px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px}
-.bx-row{display:flex;align-items:center;gap:10px}
-.bx-lbl{font-size:11px;color:var(--mu);flex:1;line-height:1.4}
-.bx-in{width:68px;padding:7px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--pk-ll);font-size:18px;font-weight:700;text-align:center}
-.bx-in:focus{outline:none;border-color:var(--pk)}
-.bx-hint{font-size:10px;color:var(--mu);margin-top:5px}
-.bx-hint b{color:var(--wa)}
-
+/* SECTION HEAD */
 .sh{display:flex;justify-content:space-between;align-items:center;padding:11px 13px 4px;font-size:10px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.07em}
 .sb{font-size:10px;padding:1px 8px;border-radius:20px;font-weight:500}
 
+/* FLAVOR CARD — production */
 .fl{padding:0 8px;display:flex;flex-direction:column;gap:6px}
-.fc{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color .15s}
-.fc.warn{border-color:var(--wa)}
-.fc.out {border-color:var(--da);opacity:.65}
+.fc{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
 .fdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .fi{flex:1;min-width:0}
-.fn{font-size:13px;font-weight:600;color:var(--cr);display:flex;align-items:center;gap:5px;margin-bottom:1px}
-.ff{font-size:10px;padding:1px 6px;border-radius:20px;font-weight:600}
-.f-ok  {background:var(--ok-s);color:var(--ok)}
-.f-wa  {background:var(--wa-s);color:var(--wa)}
-.f-da  {background:var(--da-s);color:var(--da)}
+.fn{font-size:13px;font-weight:600;color:var(--cr);margin-bottom:1px}
 .fm{font-size:10px;color:var(--mu)}
-.fbar{height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;margin-top:4px}
-.fbar-f{height:100%;border-radius:2px;transition:width .3s}
+.prod-in{width:68px;padding:7px 4px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--gr-ll);font-size:18px;font-weight:700;text-align:center;flex-shrink:0}
+.prod-in:focus{outline:none;border-color:var(--gr)}
 
-.ri{width:56px;padding:6px 4px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--pk-ll);font-size:16px;font-weight:700;text-align:center;flex-shrink:0}
-.ri:focus{outline:none;border-color:var(--pk)}
+/* INGREDIENT CARD */
+.ing-list{padding:0 8px;display:flex;flex-direction:column;gap:7px}
+.ing-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px}
+.ing-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ing-name{font-size:13px;font-weight:600;color:var(--cr)}
+.ing-del{width:26px;height:26px;border-radius:50%;border:1px solid var(--da-s);background:var(--da-s);color:var(--da);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ing-label{font-size:10px;color:var(--mu);margin-bottom:5px}
+.level-pills{display:flex;gap:4px}
+.lp{flex:1;padding:6px 3px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:10px;color:var(--mu);text-align:center;cursor:pointer;transition:all .12s;line-height:1.3}
+.lp.da{background:var(--da-s);color:var(--da);border-color:var(--da);font-weight:600}
+.lp.wa{background:var(--wa-s);color:var(--wa);border-color:var(--wa);font-weight:600}
+.lp.ok{background:var(--ok-s);color:var(--ok);border-color:var(--ok);font-weight:600}
+.lp.no{background:var(--pu-s);color:var(--pu);border-color:var(--pu);font-weight:600}
 
-.extras{margin:10px 8px 0;display:flex;flex-direction:column;gap:7px}
-.fld{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px}
-.fl-lbl{font-size:11px;font-weight:600;color:var(--pk-l);margin-bottom:6px}
-.fl-sub{font-size:10px;color:var(--wa);margin-left:5px;font-weight:400}
-.pills{display:flex;gap:5px}
-.pill{flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:11px;color:var(--mu);text-align:center;cursor:pointer;transition:all .12s}
-.s-ok  {background:var(--ok-s);color:var(--ok);border-color:var(--ok);font-weight:600}
-.s-wa  {background:var(--wa-s);color:var(--wa);border-color:var(--wa);font-weight:600}
-.s-pk  {background:var(--pk-s);color:var(--pk-l);border-color:var(--pk);font-weight:600}
-.qty-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
-.qb{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--sf);font-size:11px;color:var(--mu);cursor:pointer}
-.qb.sel{background:var(--pk);color:#fff;border-color:var(--pk);font-weight:600}
-.th-hint{font-size:10px;color:var(--mu);margin-top:5px}
-textarea{width:100%;padding:7px 10px;background:var(--sf);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;resize:none;height:56px;font-family:inherit}
-textarea:focus{outline:none;border-color:var(--pk)}
+/* ADD INGREDIENT */
+.add-wrap{padding:8px;display:flex;gap:6px}
+.add-in{flex:1;padding:9px 10px;background:var(--card);border:1px solid var(--bd);border-radius:10px;color:var(--cr);font-size:13px;font-family:inherit}
+.add-in:focus{outline:none;border-color:var(--gr)}
+.add-btn{padding:9px 14px;border-radius:10px;border:none;background:var(--gr);color:#fff;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 
+/* ACTIONS */
 .acts{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--sf);border-top:1px solid var(--bd);padding:9px 10px;display:flex;flex-direction:column;gap:6px;z-index:100}
 .btn{width:100%;padding:12px;border-radius:12px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .12s,transform .1s}
 .btn:active{opacity:.7;transform:scale(.98)}
-.btn-m{background:var(--pk);color:#fff;font-size:15px}
+.btn-m{background:var(--gr);color:#fff;font-size:15px}
 .btn-r{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.btn-s{background:var(--card);color:var(--pk-l);border:1px solid var(--bd);font-size:12px}
+.btn-s{background:var(--card);color:var(--gr-l);border:1px solid var(--bd);font-size:12px}
 .btn-d{background:var(--card);color:var(--mu);border:1px solid var(--bd);font-size:12px}
 
-.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:flex-end}
+/* MODAL */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-end}
 .ov.open{display:flex}
-.modal{background:var(--sf);border-radius:18px 18px 0 0;border-top:1px solid var(--bd);padding:16px 13px 32px;width:100%;max-height:85vh;overflow-y:auto}
-.mo-ttl{font-size:14px;font-weight:700;color:var(--pk-l);margin-bottom:2px}
+.modal{background:var(--sf);border-radius:18px 18px 0 0;border-top:1px solid var(--bd);padding:16px 13px 32px;width:100%;max-height:88vh;overflow-y:auto}
+.mo-ttl{font-size:14px;font-weight:700;color:var(--gr-l);margin-bottom:2px}
 .mo-sub{font-size:11px;color:var(--mu);margin-bottom:11px}
 .rr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd);font-size:12px}
 .rr:last-of-type{border-bottom:none}
 .rr-name{color:var(--cr)}
-.rr-r{display:flex;gap:8px;align-items:center}
-.rr-val{font-weight:700;color:var(--pk-ll)}
-.rr-flag{font-size:10px;padding:1px 6px;border-radius:20px}
-.tot{display:flex;justify-content:space-between;padding:8px 0 0;font-size:13px;font-weight:700;border-top:1px solid var(--bd);margin-top:4px}
+.rr-val{font-weight:700;color:var(--gr-ll)}
+.rr-lv{font-size:10px;padding:1px 7px;border-radius:20px}
+.lv-da{background:var(--da-s);color:var(--da)}
+.lv-wa{background:var(--wa-s);color:var(--wa)}
+.lv-ok{background:var(--ok-s);color:var(--ok)}
+.lv-no{background:var(--pu-s);color:var(--pu)}
+.sec-sep{font-size:11px;font-weight:600;color:var(--mu);padding:10px 0 5px;border-top:1px solid var(--bd);margin-top:8px}
 .cbox{background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;font-size:10px;color:var(--mu);margin-top:9px;white-space:pre-wrap;font-family:monospace;line-height:1.7}
-.mo-cl{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:var(--pk);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.mo-cl{width:100%;margin-top:12px;padding:12px;border-radius:12px;border:none;background:var(--gr);color:#fff;font-size:14px;font-weight:700;cursor:pointer}
 
-.toast{position:fixed;bottom:170px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--pk);color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:600;transition:all .3s;z-index:999;white-space:nowrap;opacity:0}
+/* TOAST */
+.toast{position:fixed;bottom:175px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--gr);color:#fff;padding:8px 18px;border-radius:20px;font-size:12px;font-weight:600;transition:all .3s;z-index:999;white-space:nowrap;opacity:0}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.empty{padding:20px;text-align:center;font-size:12px;color:var(--mu)}
+.dough-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.dough-sticker{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;text-align:center;line-height:1.2}
+.dough-info{flex:1}
+.dough-label{font-size:13px;font-weight:600;color:var(--cr);margin-bottom:2px}
+.dough-sub{font-size:10px;color:var(--mu)}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="hd">
   <div class="hd-top">
-    <div class="hd-brand">BBD — Kiosk No.1</div>
+    <div class="hd-brand">BBD — ครัว</div>
     <div class="hd-time" id="liveTime"></div>
   </div>
-  <div class="hd-date" id="liveDate"></div>
+  <div class="hd-sub" id="liveDate"></div>
 </div>
 
-<div class="cp-wrap">
-  <div class="cp-sub">รอบรายงาน</div>
-  <div class="cp-row" id="cpRow"></div>
-</div>
-
-<div class="strip">
-  <div class="sc"><div class="sv" id="sumB" style="color:var(--pk-ll)">—</div><div class="sl">รับมาเช้า</div></div>
-  <div class="sc"><div class="sv" id="sumL" style="color:var(--wa)">—</div><div class="sl">เหลือรวม</div></div>
-  <div class="sc"><div class="sv" id="sumS" style="color:var(--ok)">0</div><div class="sl">ขายแล้ว</div></div>
-  <div class="sc"><div class="sv" id="sumP" style="color:var(--cr)">—</div><div class="sl">sell-thru</div></div>
-</div>
-
-<div class="menu-st" id="menuSt"></div>
-
-<div class="bx">
-  <div class="bx-row">
-    <div class="bx-lbl">จำนวนรับจากครัวทั้งหมด<br><small>บวกอัตโนมัติจากรอบ 10:00 เท่านั้น · ล็อกไว้ตลอดวัน</small></div>
-    <div class="bx-in" id="bIn" style="display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--pk-ll);background:var(--sf);border:1px solid var(--bd);border-radius:8px;width:68px;padding:7px;text-align:center">—</div>
+<!-- TABS -->
+<div class="store-wrap">
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:11px;color:var(--mu);white-space:nowrap">ชื่อครัว</span>
+    <input id="kitchenName" type="text" placeholder="เช่น ครัว ราม 174"
+      style="flex:1;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;font-family:inherit"
+      oninput="saveKitchen()">
   </div>
-  <div class="bx-hint" id="bHint"></div>
 </div>
 
-<div class="sh">เมนูประจำ<span class="sb" style="background:var(--ok-s);color:var(--ok)">5 รส</span></div>
-<div class="fl" id="coreList"></div>
-
-<div class="sh">เมนูหมุน — สัปดาห์นี้<span class="sb" id="rotBadge" style="background:var(--wa-s);color:var(--wa)">—</span></div>
-<div class="fl" id="rotList"></div>
-
-<div id="dropSec" style="display:none">
-  <div class="sh">Weekend Drop<span class="sb" id="dropBadge" style="background:var(--pk-s);color:var(--pk-l)">Limited</span></div>
-  <div class="fl" id="dropList"></div>
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('prod')">09:30 ผลิต</div>
+  <div class="tab" onclick="switchTab('stock')">11:00 เช็คสต็อก</div>
+  <div class="tab" onclick="switchTab('dough')">16:00 แป้งดิบ</div>
 </div>
 
-<div class="extras">
-  <div class="fld">
-    <div class="fl-lbl">ลูกค้า ณ เวลานี้</div>
-    <div class="pills">
-      <div class="pill" data-g="tr" data-v="คนเยอะมาก" onclick="setPill(this,'s-ok')">เยอะมาก</div>
-      <div class="pill" data-g="tr" data-v="ปกติ"       onclick="setPill(this,'s-pk')">ปกติ</div>
-      <div class="pill" data-g="tr" data-v="น้อย"       onclick="setPill(this,'s-wa')">น้อย</div>
-    </div>
-    <div class="th-hint" id="trHint"></div>
+<!-- ═══════════════ PAGE: ผลิต ═══════════════ -->
+<div class="page active" id="page-prod">
+
+  <div class="strip">
+    <div class="sc"><div class="sv" id="sumTotal" style="color:var(--gr-ll)">0</div><div class="sl">ผลิตรวม</div></div>
+    <div class="sc"><div class="sv" id="sumCore"  style="color:var(--ok)">0</div><div class="sl">เมนูประจำ</div></div>
+    <div class="sc"><div class="sv" id="sumOther" style="color:var(--wa)">0</div><div class="sl">เมนูหมุน+ดรอป</div></div>
   </div>
 
-  <div class="fld" id="b2Card" style="display:none">
-    <div class="fl-lbl">ต้องการสั่งโดนัทมาเพิ่มไหม<span class="fl-sub">ตัดสินใจก่อน 14:00</span></div>
-    <div class="pills">
-      <div class="pill" data-g="b2" data-v="ต้องการ" onclick="setPill(this,'s-ok')">ต้องการ</div>
-      <div class="pill" data-g="b2" data-v="ไม่ต้อง" onclick="setPill(this,'s-wa')">ไม่ต้อง</div>
-      <div class="pill" data-g="b2" data-v="รอดู"   onclick="setPill(this,'s-pk')">รอดู</div>
+  <div class="sh">เมนูประจำ<span class="sb" style="background:var(--ok-s);color:var(--ok)">5 รส</span></div>
+  <div class="fl" id="coreFlav"></div>
+
+  <div class="sh">เมนูหมุน — สัปดาห์นี้<span class="sb" id="rotBadge" style="background:var(--wa-s);color:var(--wa)">3 รส</span></div>
+  <div class="fl" id="rotFlav"></div>
+
+  <div class="sh">วีคเอนด์ดรอป<span class="sb" id="dropBadge" style="background:var(--pu-s);color:var(--pu)">5 รส</span></div>
+  <div class="fl" id="dropFlav"></div>
+
+</div>
+
+<!-- ═══════════════ PAGE: วัตถุดิบ ═══════════════ -->
+<div class="page" id="page-stock">
+  <div style="padding:10px 8px 4px">
+    <div class="add-wrap" style="padding:0 0 8px">
+      <input class="add-in" id="ingInput" placeholder="เช่น เนยสด · ไข่ไก่ · น้ำมัน" onkeydown="if(event.key==='Enter')addIng()">
+      <button class="add-btn" onclick="addIng()">+ เพิ่ม</button>
     </div>
-    <div class="qty-row" id="qtyRow" style="display:none">
-      <div style="font-size:11px;color:var(--mu);width:100%">สั่งกี่ชิ้น</div>
-      <div class="qb" data-q="25" onclick="setQty(this)">25</div>
-      <div class="qb" data-q="30" onclick="setQty(this)">30</div>
-      <div class="qb" data-q="40" onclick="setQty(this)">40</div>
-      <div class="qb" data-q="50" onclick="setQty(this)">50</div>
+  </div>
+  <div class="ing-list" id="ingList">
+    <div class="empty" id="ingEmpty">ยังไม่มีรายการ — เพิ่มวัตถุดิบด้านบนได้เลย</div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: แป้งดิบ ═══════════════ -->
+<div class="page" id="page-dough">
+  <div style="padding:10px 12px 4px">
+    <div style="font-size:11px;color:var(--mu);margin-bottom:10px;line-height:1.6">
+      กรอกจำนวนแป้งดิบที่เหลืออยู่ ณ เวลา 16:00 แยกตามสีสติกเกอร์บนลัง
     </div>
   </div>
 
-  <div class="fld">
-    <div class="fl-lbl">บันทึก</div>
-    <textarea id="obs" placeholder="เช่น ลูกค้าถาม pistachio · sampling หมดเร็ว · display ล้ม"></textarea>
+  <div class="sh">แป้งกลม (ไส้)<span class="sb" style="background:var(--ok-s);color:var(--ok)">3 สต็อก</span></div>
+  <div style="padding:0 8px;display:flex;flex-direction:column;gap:6px" id="doughFilledList">
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#F5C842;color:#5A4000">สีเหลือง</div>
+      <div class="dough-info">
+        <div class="dough-label">ทำใหม่วันนี้</div>
+        <div class="dough-sub">แปะสติกเกอร์สีเหลืองที่ลัง</div>
+      </div>
+      <input class="prod-in" id="df_yellow" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#F5913A;color:#5A2000">สีส้ม</div>
+      <div class="dough-info">
+        <div class="dough-label">แช่ตู้แช่มา 1 วัน</div>
+        <div class="dough-sub">แปะสติกเกอร์สีส้มที่ลัง</div>
+      </div>
+      <input class="prod-in" id="df_orange" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#E04040;color:#fff">สีแดง</div>
+      <div class="dough-info">
+        <div class="dough-label">แช่ตู้แช่มา 2 วัน</div>
+        <div class="dough-sub">แปะสติกเกอร์สีแดงที่ลัง · ใช้ก่อน!</div>
+      </div>
+      <input class="prod-in" id="df_red" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
   </div>
+
+  <div class="sh" style="margin-top:10px">แป้งเจาะรู<span class="sb" style="background:var(--wa-s);color:var(--wa)">3 สต็อก</span></div>
+  <div style="padding:0 8px;display:flex;flex-direction:column;gap:6px" id="doughRingList">
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#F5C842;color:#5A4000">สีเหลือง</div>
+      <div class="dough-info">
+        <div class="dough-label">ทำใหม่วันนี้</div>
+        <div class="dough-sub">แปะสติกเกอร์สีเหลืองที่ลัง</div>
+      </div>
+      <input class="prod-in" id="dr_yellow" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#F5913A;color:#5A2000">สีส้ม</div>
+      <div class="dough-info">
+        <div class="dough-label">แช่ตู้แช่มา 1 วัน</div>
+        <div class="dough-sub">แปะสติกเกอร์สีส้มที่ลัง</div>
+      </div>
+      <input class="prod-in" id="dr_orange" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
+    <div class="dough-card">
+      <div class="dough-sticker" style="background:#E04040;color:#fff">สีแดง</div>
+      <div class="dough-info">
+        <div class="dough-label">แช่ตู้แช่มา 2 วัน</div>
+        <div class="dough-sub">แปะสติกเกอร์สีแดงที่ลัง · ใช้ก่อน!</div>
+      </div>
+      <input class="prod-in" id="dr_red" type="number" inputmode="numeric" placeholder="0" oninput="onDough()">
+    </div>
+
+  </div>
+
+  <!-- dough summary -->
+  <div style="margin:10px 8px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px">
+    <div style="font-size:11px;font-weight:600;color:var(--gr-l);margin-bottom:8px">สรุปแป้งดิบทั้งหมด</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#F5C842" id="dSum_yellow">0</div>
+        <div style="font-size:10px;color:var(--mu)">ทำวันนี้</div>
+      </div>
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#F5913A" id="dSum_orange">0</div>
+        <div style="font-size:10px;color:var(--mu)">แช่ 1 วัน</div>
+      </div>
+      <div>
+        <div style="font-size:18px;font-weight:700;color:#E04040" id="dSum_red">0</div>
+        <div style="font-size:10px;color:var(--mu)">แช่ 2 วัน — ใช้ด่วน!</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<!-- ACTIONS -->
 <div class="acts">
-  <button class="btn btn-m" onclick="submit()">ส่งรายงาน</button>
+  <button class="btn btn-m" onclick="openRpt()">ส่งรายงาน</button>
   <div class="btn-r">
     <button class="btn btn-s" onclick="openRpt()">ดูรายงาน</button>
     <button class="btn btn-d" onclick="doReset()">รีเซ็ตวันใหม่</button>
   </div>
 </div>
 
+<!-- MODAL -->
 <div class="ov" id="ov" onclick="closeOv(event)">
   <div class="modal">
-    <div class="mo-ttl">รายงาน Kiosk No.1</div>
+    <div class="mo-ttl">รายงาน BBD — ครัว ราม 174</div>
     <div class="mo-sub" id="moSub"></div>
     <div id="moRows"></div>
-    <div class="tot" style="color:var(--pk-ll)"><span>เหลือรวม</span><span id="totL"></span></div>
-    <div class="tot" style="color:var(--ok);font-size:12px"><span>ขายแล้ว</span><span id="totS"></span></div>
     <div class="cbox" id="cbox"></div>
     <button class="mo-cl" onclick="closeOv()">ปิด</button>
   </div>
@@ -209,43 +290,60 @@ textarea:focus{outline:none;border-color:var(--pk)}
 <div class="toast" id="toast"></div>
 
 <script>
-var SHEETS_URL="YOUR_WEB_APP_URL_HERE";
-var MENU_URL  ="YOUR_WEB_APP_URL_HERE";
+var SHEETS_URL = "YOUR_WEB_APP_URL_HERE";
 
-// flag thresholds
-var T_OK=15, T_WARN=7, T_CRIT=3; // >15 ปกติ · 7-15 เหลือน้อย · <3 เหลือน้อยมาก · 0 หมด
-
-var CPS=[
-  {id:"c1",lbl:"10:00",note:"เปิดร้าน"},
-  {id:"c2",lbl:"14:00",note:"ตัดสินใจสั่งโดนัทเพิ่มก่อน 14:00",b2:true},
-  {id:"c3",lbl:"16:45",note:"รอบบ่าย"},
-  {id:"c4",lbl:"19:00",note:"ช่วงครอบครัว"},
-  {id:"c5",lbl:"21:00",note:"ปิดร้าน"},
-];
-
-var MENU={
-  core:[
-    {id:"honey",  name:"Honey Glazed",       price:45,color:"#C88020",type:"ring"},
-    {id:"berry",  name:"Boraberry",           price:79,color:"#C060A0",type:"filled"},
-    {id:"straw",  name:"Strawberry CC",       price:79,color:"#E04060",type:"filled"},
-    {id:"ganache",name:"Ganache Au Chocolat", price:79,color:"#6B3A1F",type:"filled"},
-    {id:"shio",   name:"Messy Shio Brown",    price:79,color:"#C0A040",type:"filled"},
+// ── MENUS ─────────────────────────────────────────────────────────
+var MENUS = {
+  core: [
+    {id:"honey",   name:"Honey Glazed",        price:45, color:"#C88020", type:"ring"},
+    {id:"berry",   name:"Boraberry",            price:79, color:"#C060A0", type:"filled"},
+    {id:"straw",   name:"Strawberry CC",        price:79, color:"#E04060", type:"filled"},
+    {id:"ganache", name:"Ganache Au Chocolat",  price:79, color:"#6B3A1F", type:"filled"},
+    {id:"shio",    name:"Messy Shio Brown",     price:79, color:"#C0A040", type:"filled"},
   ],
-  rotating:[
-    {id:"rot1",name:"Pink Rainbow",  price:55,color:"#E080B0",type:"ring"},
-    {id:"rot2",name:"Chocolate Ring",price:55,color:"#4A2A10",type:"ring"},
-    {id:"rot3",name:"Super Lemon",   price:79,color:"#D0C020",type:"filled"},
+  rotating: [
+    {id:"rot1", name:"Pink Rainbow",         price:55, color:"#E080B0", type:"ring"},
+    {id:"rot2", name:"Chocolate Ring",       price:55, color:"#7A5A30", type:"ring"},
+    {id:"rot3", name:"Super Lemon",          price:79, color:"#D0C020", type:"filled"},
+    {id:"rot4", name:"Peanut Butter Almond", price:79, color:"#C09040", type:"filled"},
+    {id:"rot5", name:"B&W Oreo",             price:79, color:"#505050", type:"filled"},
+    {id:"rot6", name:"Pistachio Feitine",    price:79, color:"#6A9040", type:"filled"},
+    {id:"rot7", name:"Earl Grey",            price:55, color:"#8080A0", type:"ring"},
+    {id:"rot8", name:"Maple & Bacon",        price:65, color:"#A05020", type:"filled"},
+    {id:"rot9", name:"Lychee Rose",          price:79, color:"#E060A0", type:"filled"},
+    {id:"rot10",name:"Espresso Ring",        price:55, color:"#3A2010", type:"ring"},
+    {id:"rot11",name:"Builder Tea Glaze",    price:55, color:"#C09060", type:"ring"},
+    {id:"rot12",name:"Blueberry Compote",    price:79, color:"#4040A0", type:"filled"},
   ],
-  drop:[
-    {id:"drop1",name:"No.29 Cheese Brulee",price:79,color:"#F0C040",type:"filled"},
+  drop: [
+    {id:"drop1", name:"No.29 Cheese Brulee", price:79, color:"#F0C040", type:"filled"},
+    {id:"drop2", name:"Dirty Coffee",         price:79, color:"#5A3010", type:"filled"},
+    {id:"drop3", name:"Black Truffle",        price:89, color:"#1A1A1A", type:"filled"},
+    {id:"drop4", name:"Very Matcha",          price:79, color:"#507030", type:"filled"},
+    {id:"drop5", name:"Gaba Cream",           price:79, color:"#A0C080", type:"filled"},
   ],
 };
 
-var S=load(),curCP=CPS[0],curTr="",curB2="",curQty="";
+// ── STATE ─────────────────────────────────────────────────────────
+var S = load();
+var curTab = "prod";
 
-function load(){try{var s=JSON.parse(localStorage.getItem("bbd4")||"{}");if(s.date!==new Date().toDateString())return fresh();return s;}catch(e){return fresh();}}
-function fresh(){return{date:new Date().toDateString(),rem:{},batch:0};}
-function save(){localStorage.setItem("bbd4",JSON.stringify(S));}
+function load(){
+  try{var s=JSON.parse(localStorage.getItem("bbd_kitchen")||"{}");
+    if(s.date!==new Date().toDateString()) return fresh();return s;
+  }catch(e){return fresh();}
+}
+function fresh(){return{date:new Date().toDateString(),prod:{},ings:[]};}
+function save(){localStorage.setItem("bbd_kitchen",JSON.stringify(S));}
+
+// ── CLOCK ─────────────────────────────────────────────────────────
+function saveKitchen(){
+  var v=el("kitchenName")?el("kitchenName").value:"";
+  localStorage.setItem("bbd_kitchen_name",v);
+}
+function getKitchen(){
+  return localStorage.getItem("bbd_kitchen_name")||"ไม่ระบุครัว";
+}
 
 function tick(){
   var n=new Date();
@@ -253,247 +351,290 @@ function tick(){
   var mo=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
   el("liveDate").textContent="วัน"+days[n.getDay()]+" "+n.getDate()+" "+mo[n.getMonth()]+" "+(n.getFullYear()+543);
   el("liveTime").textContent=p2(n.getHours())+":"+p2(n.getMinutes());
-  document.querySelectorAll(".cp-btn").forEach(function(b,i){
-    var t=CPS[i].lbl.split(":").map(Number);
-    var m=n.getHours()*60+n.getMinutes(),tm=t[0]*60+t[1];
-    b.classList.toggle("due",Math.abs(m-tm)<=15);
-  });
 }
 function p2(x){return String(x).padStart(2,"0");}
 function el(id){return document.getElementById(id);}
 setInterval(tick,15000);
 
-function renderCPs(){
-  var w=el("cpRow");w.innerHTML="";
-  CPS.forEach(function(cp,i){
-    var b=document.createElement("div");
-    b.className="cp-btn"+(i===0?" active":"");
-    b.textContent=cp.lbl;b.title=cp.note||"";
-    b.onclick=function(){
-      document.querySelectorAll(".cp-btn").forEach(function(e){e.classList.remove("active");});
-      b.classList.add("active");curCP=cp;
-      el("b2Card").style.display=cp.b2?"":"none";
-    };
-    w.appendChild(b);
+// ── TABS ──────────────────────────────────────────────────────────
+function switchTab(tab){
+  curTab=tab;
+  document.querySelectorAll(".tab").forEach(function(t,i){
+    t.classList.toggle("active",["prod","stock","dough"][i]===tab);
   });
-  el("b2Card").style.display="none";
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  el("page-"+tab).classList.add("active");
 }
 
-function all(){return MENU.core.concat(MENU.rotating).concat(MENU.drop);}
-
-function getFlag(rem){
-  if(rem===null||rem===undefined) return{cls:"f-ok",txt:"—"};
-  if(rem<=0)       return{cls:"f-da",txt:"หมด"};
-  if(rem<T_CRIT)   return{cls:"f-wa",txt:"เหลือน้อยมาก"};
-  if(rem<=T_OK)    return{cls:"f-wa",txt:"เหลือน้อย"};
-  return{cls:"f-ok",txt:"ปกติ"};
+function onDough(){
+  var keys=["yellow","orange","red"];
+  keys.forEach(function(k){
+    var f=parseInt(el("df_"+k)?el("df_"+k).value:0)||0;
+    var r=parseInt(el("dr_"+k)?el("dr_"+k).value:0)||0;
+    var sum=el("dSum_"+k);
+    if(sum) sum.textContent=f+r;
+  });
+  saveDough();
 }
 
-function renderMenus(){
-  renderList("coreList",MENU.core);
-  renderList("rotList",MENU.rotating);
-  el("rotBadge").textContent=MENU.rotating.length+" รส";
-  var wd=[5,6,0].includes(new Date().getDay());
-  el("dropSec").style.display=wd&&MENU.drop.length?"":"none";
-  if(wd&&MENU.drop.length){renderList("dropList",MENU.drop);el("dropBadge").textContent=MENU.drop.length+" รส";}
+function saveDough(){
+  var d={
+    df_yellow:el("df_yellow")?el("df_yellow").value:"",
+    df_orange:el("df_orange")?el("df_orange").value:"",
+    df_red:   el("df_red")   ?el("df_red").value:"",
+    dr_yellow:el("dr_yellow")?el("dr_yellow").value:"",
+    dr_orange:el("dr_orange")?el("dr_orange").value:"",
+    dr_red:   el("dr_red")   ?el("dr_red").value:"",
+  };
+  localStorage.setItem("bbd_dough_"+new Date().toDateString(),JSON.stringify(d));
 }
 
-function renderList(listId,items){
-  var list=el(listId);if(!list)return;list.innerHTML="";
-  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
+function loadDough(){
+  try{
+    var d=JSON.parse(localStorage.getItem("bbd_dough_"+new Date().toDateString())||"{}");
+    Object.keys(d).forEach(function(k){
+      var inp=el(k);if(inp&&d[k]!=="") inp.value=d[k];
+    });
+    onDough();
+  }catch(e){}
+}
+
+// ── RENDER PRODUCTION ─────────────────────────────────────────────
+function allMenus(){return MENUS.core.concat(MENUS.rotating).concat(MENUS.drop);}
+
+function renderProd(){
+  renderProdList("coreFlav", MENUS.core);
+  renderProdList("rotFlav",  MENUS.rotating);
+  renderProdList("dropFlav", MENUS.drop);
+  el("rotBadge").textContent = MENUS.rotating.length+" รส";
+  el("dropBadge").textContent = MENUS.drop.length+" รส";
+  calcProdSummary();
+}
+
+function renderProdList(listId, items){
+  var list = el(listId); if(!list) return;
+  list.innerHTML = "";
   items.forEach(function(item){
-    var rem=S.rem[item.id]!==undefined?S.rem[item.id]:(per||null);
-    var f=getFlag(rem),pct=per>0&&rem!==null?Math.min(rem/per,1):0;
-    var c=document.createElement("div");
-    c.className="fc"+(rem===0?" out":(rem!==null&&rem<=T_OK?" warn":""));
-    c.id="fc_"+item.id;
-    c.innerHTML=
+    var val = S.prod[item.id] || "";
+    var c = document.createElement("div");
+    c.className = "fc";
+    c.innerHTML =
       '<div class="fdot" style="background:'+item.color+'"></div>'+
       '<div class="fi">'+
-        '<div class="fn">'+item.name+'<span class="ff '+f.cls+'" id="ff_'+item.id+'">'+f.txt+'</span></div>'+
+        '<div class="fn">'+item.name+'</div>'+
         '<div class="fm">฿'+item.price+' · '+item.type+'</div>'+
-        '<div class="fbar"><div class="fbar-f" id="fb_'+item.id+'" style="width:'+Math.round(pct*100)+'%;background:'+item.color+'"></div></div>'+
       '</div>'+
-      '<input class="ri" id="ri_'+item.id+'" type="number" inputmode="numeric"'+
-        ' value="'+(rem!==null?rem:'')+'" placeholder="?" oninput="onRem(\''+item.id+'\',this.value)">';
+      '<input class="prod-in" id="pi_'+item.id+'" type="number" inputmode="numeric"'+
+        ' value="'+val+'" placeholder="0"'+
+        ' oninput="onProd(\''+item.id+'\',this.value)">';
     list.appendChild(c);
   });
 }
 
-function onRem(id,val){
-  var v=val===""?null:Math.max(0,parseInt(val)||0);
-  S.rem[id]=v;save();
-  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
-  var f=getFlag(v),pct=per>0&&v!==null?Math.min(v/per,1):0;
-  var card=el("fc_"+id),flag=el("ff_"+id),bar=el("fb_"+id);
-  if(card) card.className="fc"+(v===0?" out":(v!==null&&v<=T_OK?" warn":""));
-  if(flag){flag.className="ff "+f.cls;flag.textContent=f.txt;}
-  if(bar)  bar.style.width=Math.round(pct*100)+"%";
-  if(curCP.id==="c1") // แสดง batch ที่ lock ไว้ (ถ้ามี)
-var _locked=S.batchLocked||S.batch||0;
-el("bIn").textContent=_locked||"—";
-if(_locked) el("bHint").innerHTML='ยอดรับจากรอบ 10:00: <b>'+_locked+'</b> ชิ้น (ล็อกแล้ว)';
-calcSummary();
-  calcSummary();
+function onProd(id, val){
+  var v = val===""?0:Math.max(0,parseInt(val)||0);
+  S.prod[id] = v; save();
+  calcProdSummary();
 }
 
-function onBatch(){
-  // ถ้ารอบ 10:00 → คำนวณ batch จาก sum rem แล้ว lock ไว้
-  // รอบอื่น → ใช้ค่า batch ที่ lock ไว้จากรอบ 10:00 เสมอ
-  if(curCP.id==="c1"){
-    var tot=0,hasAny=false;
-    all().forEach(function(item){
-      var r=S.rem[item.id];
-      if(r!==null&&r!==undefined){tot+=parseInt(r)||0;hasAny=true;}
-    });
-    if(hasAny){S.batch=tot;S.batchLocked=tot;save();}
-    el("bIn").textContent=hasAny?tot:"—";
-    if(hasAny) el("bHint").innerHTML='รับมาทั้งหมด <b>'+tot+'</b> ชิ้น &nbsp;·&nbsp; batch พรุ่งนี้แนะนำ ~<b>'+Math.round(tot*1.2)+'</b> ชิ้น';
-    else el("bHint").innerHTML="กรอกจำนวนแต่ละรสด้านล่างก่อน";
-  } else {
-    // รอบอื่น — แสดง locked batch จากรอบ 10:00 เท่านั้น
-    var locked=S.batchLocked||S.batch||0;
-    el("bIn").textContent=locked||"—";
-    if(locked) el("bHint").innerHTML='ยอดรับจากรอบ 10:00: <b>'+locked+'</b> ชิ้น (ล็อกแล้ว)';
-    else el("bHint").innerHTML="ยังไม่มีข้อมูลรอบ 10:00";
+function calcProdSummary(){
+  var total=0, core=0, other=0;
+  MENUS.core.forEach(function(item){var v=parseInt(S.prod[item.id])||0;core+=v;total+=v;});
+  MENUS.rotating.concat(MENUS.drop).forEach(function(item){var v=parseInt(S.prod[item.id])||0;other+=v;total+=v;});
+  el("sumTotal").textContent = total;
+  el("sumCore").textContent  = core;
+  el("sumOther").textContent = other;
+}
+
+// ── RENDER INGREDIENTS ─────────────────────────────────────────────
+var LEVELS = [
+  {id:"da", lbl:"ไม่พอใช้พรุ่งนี้", cls:"da"},
+  {id:"wa", lbl:"พอใช้อีก 2-3 วัน",  cls:"wa"},
+  {id:"ok", lbl:"พอใช้อีก 4-5 วัน",  cls:"ok"},
+  {id:"no", lbl:"ไม่ต้องเติม",        cls:"no"},
+];
+
+function renderIngs(){
+  var list = el("ingList");
+  list.innerHTML = "";
+  if(S.ings.length === 0){
+    list.innerHTML = '<div class="empty" id="ingEmpty">ยังไม่มีรายการ — เพิ่มวัตถุดิบด้านบนได้เลย</div>';
+    return;
   }
-  calcSummary();
-}
-
-function calcSummary(){
-  var totRem=0,has=false;
-  all().forEach(function(item){var r=S.rem[item.id];if(r!==null&&r!==undefined){totRem+=parseInt(r)||0;has=true;}});
-  var locked=S.batchLocked||S.batch||0;
-  var sold=locked>0&&has?Math.max(locked-totRem,0):0;
-  var pct=locked>0&&has?Math.round(sold/locked*100)+"%":"—";
-  el("sumB").textContent=locked||"—";
-  el("sumL").textContent=has?totRem:"—";
-  el("sumS").textContent=sold||"—";
-  el("sumP").textContent=pct;
-  if(has){el("sumL").style.color=totRem<10?"var(--da)":totRem<25?"var(--wa)":"var(--pk-ll)";}
-}
-
-var TH={
-  "คนเยอะมาก":"เพิ่ม sampling · ตรวจ stock ทุก 15 นาที",
-  "ปกติ":"รอบปกติ",
-  "น้อย":"เพิ่ม sampling · approach คนยืนดู · ตรวจ display"
-};
-
-function setPill(el_,selCls){
-  var g=el_.dataset.g,v=el_.dataset.v;
-  document.querySelectorAll(".pill[data-g='"+g+"']").forEach(function(e){
-    e.className=e.className.replace(/s-\w+/g,"").trim();
+  S.ings.forEach(function(ing, idx){
+    var card = document.createElement("div");
+    card.className = "ing-card";
+    var pillsHtml = LEVELS.map(function(lv){
+      var sel = ing.level===lv.id ? lv.cls : "";
+      return '<div class="lp '+sel+'" onclick="setLevel('+idx+',\''+lv.id+'\')">'+lv.lbl+'</div>';
+    }).join("");
+    card.innerHTML =
+      '<div class="ing-top">'+
+        '<div class="ing-name">'+ing.name+'</div>'+
+        '<div class="ing-del" onclick="removeIng('+idx+')">×</div>'+
+      '</div>'+
+      '<div class="ing-label">ระดับของที่เหลือ</div>'+
+      '<div class="level-pills" id="lp_'+idx+'">'+pillsHtml+'</div>';
+    list.appendChild(card);
   });
-  el_.classList.add(selCls);
-  if(g==="tr"){curTr=v;el("trHint").textContent=TH[v]||"";}
-  if(g==="b2"){curB2=v;el("qtyRow").style.display=v==="ต้องการ"?"flex":"none";if(v!=="ต้องการ")curQty="";}
 }
 
-function setQty(el_){
-  document.querySelectorAll(".qb").forEach(function(e){e.classList.remove("sel");});
-  el_.classList.add("sel");curQty=el_.dataset.q;
+function addIng(){
+  var inp = el("ingInput");
+  var name = inp.value.trim();
+  if(!name) return;
+  S.ings.push({name:name, level:""});
+  save(); renderIngs();
+  inp.value = ""; inp.focus();
+  toast("เพิ่ม '"+name+"' แล้ว");
 }
 
-function buildRpt(){
-  var batch=S.batch||0,per=batch>0?Math.round(batch/all().length):0;
-  var totR=0,totS=0,rows=[];
-  all().forEach(function(item){
-    var rem=S.rem[item.id]!==null&&S.rem[item.id]!==undefined?S.rem[item.id]:per;
-    var sold=per>0?Math.max(per-rem,0):0;
-    totR+=rem;totS+=sold;
-    rows.push({name:item.name,rem:rem,sold:sold,color:item.color});
+function removeIng(idx){
+  S.ings.splice(idx,1); save(); renderIngs();
+}
+
+function setLevel(idx, levelId){
+  S.ings[idx].level = levelId; save();
+  var wrap = el("lp_"+idx);
+  if(!wrap) return;
+  wrap.querySelectorAll(".lp").forEach(function(el_, i){
+    el_.className = "lp"+(LEVELS[i].id===levelId?" "+LEVELS[i].cls:"");
   });
-  return{rows:rows,totR:totR,totS:totS,batch:batch};
 }
 
+// ── REPORT ────────────────────────────────────────────────────────
 function openRpt(){
-  var d=buildRpt();
-  el("moSub").textContent=el("liveDate").textContent+" · "+curCP.lbl;
-  var html="";
-  d.rows.forEach(function(r){
-    var f=getFlag(r.rem);
-    html+='<div class="rr"><span class="rr-name">'+r.name+'</span>'+
-      '<div class="rr-r"><span class="rr-val">เหลือ '+r.rem+'</span>'+
-      '<span class="rr-flag '+f.cls+'">'+f.txt+'</span></div></div>';
-  });
-  el("moRows").innerHTML=html;
-  el("totL").textContent=d.totR+" ชิ้น";
-  el("totS").textContent=d.totS+" ชิ้น";
-  var pct=d.batch>0?Math.round(d.totS/d.batch*100)+"%":"—";
-  var txt="รายงาน BBD Kiosk No.1\n";
-  txt+=el("liveDate").textContent+" · "+curCP.lbl+"\n";
-  txt+="─────────────────\n";
-  d.rows.forEach(function(r){
-    var mk=r.rem===0?"[หมด]":r.rem<T_CRIT?"[น้อยมาก]":r.rem<=T_OK?"[น้อย]":"[ปกติ]";
-    txt+="- "+r.name+": เหลือ "+r.rem+" ชิ้น "+mk+"\n";
-  });
-  txt+="─────────────────\n";
-  txt+="เหลือรวม: "+d.totR+" | ขาย: "+d.totS+" | sell-thru: "+pct+"\n";
-  if(curTr) txt+="ลูกค้า: "+curTr+"\n";
-  if(curB2) txt+="Batch 2: "+curB2+(curQty?" ("+curQty+" ชิ้น)":"")+"\n";
-  var obs=el("obs").value;
-  if(obs) txt+="บันทึก: "+obs+"\n";
-  txt+="batch พรุ่งนี้แนะนำ: ~"+Math.round(d.totS*1.2)+" ชิ้น";
-  el("cbox").textContent=txt;
-  el("ov").classList.add("open");
-  if(navigator.clipboard) navigator.clipboard.writeText(txt).catch(function(){});
-  return txt;
-}
+  var d = el("liveDate").textContent;
+  var t = el("liveTime").textContent;
+  el("moSub").textContent = getKitchen()+" · "+d+" · "+t;
 
-function closeOv(e){if(!e||e.target===el("ov"))el("ov").classList.remove("open");}
+  var total=0, rows="";
+  var txt = "รายงาน BBD ครัว\n"+getKitchen()+"\n"+d+" · "+t+"\n";
+  txt += "─────────────────\n";
+  txt += "[ ผลิตวันนี้ ]\n";
 
-function submit(){
-  var d=buildRpt(),txt=openRpt();
-  if(!SHEETS_URL||SHEETS_URL.includes("YOUR_")){toast("Copy แล้ว — วาง LINE ได้เลย");return;}
-  var btn=document.querySelector(".btn-m");
-  btn.textContent="กำลังส่ง...";btn.disabled=true;
-  fetch(SHEETS_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({date:el("liveDate").textContent,time:el("liveTime").textContent,
-      checkpoint:curCP.lbl,batchReceived:d.batch,totalSold:d.totS,totalRemaining:d.totR,
-      sellThrough:d.batch>0?Math.round(d.totS/d.batch*100):0,remaining:S.rem,
-      traffic:curTr,batch2Decision:curB2,batch2Qty:curQty,
-      observation:el("obs").value,tomorrowBatch:Math.round(d.totS*1.2),
-      skuDetail:d.rows.map(function(r){return r.name+":"+r.rem;}).join(", ")})
-  }).then(function(){
-    toast("ส่ง Sheets แล้ว");
-    btn.textContent="ส่งแล้ว · "+curCP.lbl;
-    setTimeout(function(){btn.textContent="ส่งรายงาน";btn.disabled=false;},3500);
-  }).catch(function(){toast("Copy แล้ว — วาง LINE ได้เลย");btn.textContent="ส่งรายงาน";btn.disabled=false;});
-}
-
-function doReset(){
-  if(confirm("รีเซ็ตทุกตัวนับ? ทำเมื่อเริ่มวันใหม่เท่านั้น")){
-    S=fresh();save();
-    el("bIn").value="";el("obs").value="";
-    document.querySelectorAll(".pill,.qb").forEach(function(e){
-      e.className=e.className.replace(/s-\w+/g,"").replace(/sel/g,"").trim();
+  // production rows
+  var sections = [
+    {lbl:"เมนูประจำ",  items:MENUS.core},
+    {lbl:"เมนูหมุน", items:MENUS.rotating},
+    {lbl:"วีคเอนด์ดรอป",items:MENUS.drop},
+  ];
+  rows += '<div class="sec-sep">ผลิตวันนี้ (09:30)</div>';
+  sections.forEach(function(sec){
+    var secTotal=0;
+    sec.items.forEach(function(item){
+      var v=parseInt(S.prod[item.id])||0;
+      if(v>0){
+        secTotal+=v;total+=v;
+        rows+='<div class="rr"><span class="rr-name">'+item.name+'</span><span class="rr-val">'+v+' ชิ้น</span></div>';
+        txt+="- "+item.name+": "+v+" ชิ้น\n";
+      }
     });
-    curTr="";curB2="";curQty="";
-    renderMenus();calcSummary();toast("รีเซ็ตเรียบร้อย");
+  });
+  rows+='<div class="rr" style="font-weight:700"><span style="color:var(--gr-ll)">รวมทั้งหมด</span><span style="color:var(--gr-ll)">'+total+' ชิ้น</span></div>';
+  txt+="รวม: "+total+" ชิ้น\n";
+
+  // ingredient rows
+  if(S.ings.length > 0){
+    txt += "─────────────────\n[ วัตถุดิบ ]\n";
+    rows += '<div class="sec-sep">เช็ดวัตถุดิบ (11:00)</div>';
+    var lvMap={da:"ไม่พอใช้พรุ่งนี้",wa:"พอใช้อีก 2-3 วัน",ok:"พอใช้อีก 4-5 วัน",no:"ไม่ต้องเติม"};
+    var lvCls={da:"lv-da",wa:"lv-wa",ok:"lv-ok",no:"lv-no"};
+    S.ings.forEach(function(ing){
+      var lv=ing.level?lvMap[ing.level]:"ยังไม่ได้ประเมิน";
+      var cls=ing.level?lvCls[ing.level]:"";
+      rows+='<div class="rr"><span class="rr-name">'+ing.name+'</span>'+
+        '<span class="rr-lv '+cls+'">'+lv+'</span></div>';
+      txt+="- "+ing.name+": "+lv+"\n";
+    });
+  }
+
+  // dough section
+  var dKeys=["yellow","orange","red"];
+  var dNames=["ทำวันนี้","แช่ 1 วัน","แช่ 2 วัน"];
+  var dColors=["#F5C842","#F5913A","#E04040"];
+  var hasDough=false;
+  dKeys.forEach(function(k){
+    var f=parseInt(el("df_"+k)?el("df_"+k).value:0)||0;
+    var r=parseInt(el("dr_"+k)?el("dr_"+k).value:0)||0;
+    if(f>0||r>0) hasDough=true;
+  });
+  if(hasDough){
+    rows+='<div class="sec-sep">แป้งดิบสต็อก (16:00)</div>';
+    txt+="─────────────────\n[ แป้งดิบสต็อก 16:00 ]\n";
+    rows+='<div class="rr"><span style="color:var(--mu);font-size:11px"></span><span style="color:var(--mu);font-size:11px;display:flex;gap:16px"><span>แป้งกลม</span><span>แป้งเจาะรู</span></span></div>';
+    dKeys.forEach(function(k,i){
+      var f=parseInt(el("df_"+k)?el("df_"+k).value:0)||0;
+      var r=parseInt(el("dr_"+k)?el("dr_"+k).value:0)||0;
+      rows+='<div class="rr">'+
+        '<span class="rr-name" style="color:'+dColors[i]+'">'+dNames[i]+'</span>'+
+        '<div style="display:flex;gap:16px">'+
+          '<span class="rr-val">กลม '+f+'</span>'+
+          '<span class="rr-val">รู '+r+'</span>'+
+        '</div></div>';
+      txt+="- "+dNames[i]+": กลม "+f+" ชิ้น · เจาะรู "+r+" ชิ้น\n";
+    });
+  }
+
+  el("moRows").innerHTML = rows;
+
+  // build copy text
+  var cpBox = "";
+  cpBox = txt;
+  el("cbox").textContent = cpBox;
+  el("ov").classList.add("open");
+
+  if(navigator.clipboard) navigator.clipboard.writeText(cpBox).catch(function(){});
+
+  // send to sheets
+  if(SHEETS_URL && !SHEETS_URL.includes("YOUR_")){
+    var payload = {
+      source: "kitchen",
+      kitchen: getKitchen(),
+      date: d, time: t,
+      totalProduced: total,
+      production: S.prod,
+      ingredients: S.ings,
+    };
+    fetch(SHEETS_URL,{method:"POST",mode:"no-cors",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    }).catch(function(){});
   }
 }
 
+function closeOv(e){
+  if(!e||e.target===el("ov")) el("ov").classList.remove("open");
+}
+
+// ── RESET ─────────────────────────────────────────────────────────
+function doReset(){
+  if(confirm("รีเซ็ตทุกข้อมูล? ทำเมื่อขึ้นวันใหม่เท่านั้น")){
+    S=fresh();save();
+    localStorage.removeItem("bbd_dough_"+new Date().toDateString());
+    ["df_yellow","df_orange","df_red","dr_yellow","dr_orange","dr_red"].forEach(function(k){
+      var inp=el(k);if(inp) inp.value="";
+    });
+    onDough();
+    renderProd();renderIngs();
+    toast("รีเซ็ตเรียบร้อย");
+  }
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
 function toast(msg){
   var t=el("toast");t.textContent=msg;t.classList.add("show");
-  setTimeout(function(){t.classList.remove("show");},2600);
+  setTimeout(function(){t.classList.remove("show");},2500);
 }
 
-function fetchMenu(){
-  if(!MENU_URL||MENU_URL.includes("YOUR_")){el("menuSt").textContent="เมนู default";return;}
-  el("menuSt").textContent="กำลังโหลดเมนู...";
-  fetch(MENU_URL+"?action=menu").then(function(r){return r.json();})
-    .then(function(data){
-      if(data.core&&data.core.length){
-        MENU.core=data.core;MENU.rotating=data.rotating||[];MENU.drop=data.drop||[];
-        renderMenus();calcSummary();el("menuSt").textContent="เมนูอัปเดทแล้ว";
-      }
-    }).catch(function(){el("menuSt").textContent="เมนู default";});
-}
-
-tick();renderCPs();renderMenus();calcSummary();
-onBatch();
-fetchMenu();
-setInterval(fetchMenu,5*60*1000);
+// ── INIT ──────────────────────────────────────────────────────────
+tick();
+renderProd();
+renderIngs();
+loadDough();
+// โหลดชื่อครัวที่บันทึกไว้
+var _kn=localStorage.getItem("bbd_kitchen_name")||"";
+if(_kn&&el("kitchenName")) el("kitchenName").value=_kn;
 </script>
 </body>
 </html>
