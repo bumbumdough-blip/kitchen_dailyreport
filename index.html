@@ -127,11 +127,17 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 <!-- TABS -->
 <div class="store-wrap">
-  <div style="display:flex;align-items:center;gap:8px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
     <span style="font-size:11px;color:var(--mu);white-space:nowrap">ชื่อครัว</span>
     <input id="kitchenName" type="text" placeholder="เช่น ครัว ราม 174"
       style="flex:1;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;font-family:inherit"
       oninput="saveKitchen()">
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:11px;color:var(--mu);white-space:nowrap">ผู้รายงาน</span>
+    <input id="kitchenReporter" type="text" placeholder="ชื่อพนักงานครัว"
+      style="flex:1;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;font-family:inherit"
+      oninput="saveKitchenReporter()">
   </div>
 </div>
 
@@ -290,7 +296,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div class="toast" id="toast"></div>
 
 <script>
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbxNqxziVIkFBT8_nj8fWhSk3rY_dUUOnItQ7SSaQw-3YhF8oikeNMnAcIX4OZsgR4M/exec";
+var SHEETS_URL = "https://script.google.com/macros/s/AKfycbwfpMz6QHsm_mIMxgSyppgte0Qg0YMx7Fr16VZ6SlHLC6GL-x1XScRSZBfmqBjzPfhs/exec";
 
 // ── MENUS ─────────────────────────────────────────────────────────
 var MENUS = {
@@ -352,6 +358,13 @@ function saveKitchen(){
 }
 function getKitchen(){
   return localStorage.getItem("bbd_kitchen_name")||"ไม่ระบุครัว";
+}
+function saveKitchenReporter(){
+  var v=el("kitchenReporter")?el("kitchenReporter").value:"";
+  localStorage.setItem("bbd_kitchen_reporter",v);
+}
+function getKitchenReporter(){
+  return localStorage.getItem("bbd_kitchen_reporter")||"";
 }
 
 function tick(){
@@ -515,7 +528,7 @@ function setLevel(idx, levelId){
 function openRpt(){
   var d = el("liveDate").textContent;
   var t = el("liveTime").textContent;
-  el("moSub").textContent = getKitchen()+" · "+d+" · "+t;
+  el("moSub").textContent = getKitchen()+(getKitchenReporter()?" · "+getKitchenReporter():"")+" · "+d+" · "+t;
 
   var total=0, rows="";
   var txt = "รายงาน BBD ครัว\n"+getKitchen()+"\n"+d+" · "+t+"\n";
@@ -597,13 +610,27 @@ function openRpt(){
 
   // send to sheets
   if(SHEETS_URL && !SHEETS_URL.includes("YOUR_")){
+    // รวมข้อมูลแป้งดิบจาก localStorage
+    var _dk = "bbd_dough_"+new Date().toDateString();
+    var _dough = {};
+    try { _dough = JSON.parse(localStorage.getItem(_dk)||"{}"); } catch(e_){}
+
     var payload = {
       source: "kitchen",
       kitchen: getKitchen(),
+      reporter: getKitchenReporter(),
       date: d, time: t,
       totalProduced: total,
       production: S.prod,
       ingredients: S.ings,
+      dough: {
+        df_yellow: parseInt(_dough.df_yellow)||0,
+        df_orange: parseInt(_dough.df_orange)||0,
+        df_red:    parseInt(_dough.df_red)||0,
+        dr_yellow: parseInt(_dough.dr_yellow)||0,
+        dr_orange: parseInt(_dough.dr_orange)||0,
+        dr_red:    parseInt(_dough.dr_red)||0,
+      },
     };
     fetch(SHEETS_URL,{method:"POST",mode:"no-cors",
       headers:{"Content-Type":"application/json"},
@@ -644,6 +671,8 @@ loadDough();
 // โหลดชื่อครัวที่บันทึกไว้
 var _kn=localStorage.getItem("bbd_kitchen_name")||"";
 if(_kn&&el("kitchenName")) el("kitchenName").value=_kn;
+var _kr=localStorage.getItem("bbd_kitchen_reporter")||"";
+if(_kr&&el("kitchenReporter")) el("kitchenReporter").value=_kr;
 </script>
 </body>
 </html>
