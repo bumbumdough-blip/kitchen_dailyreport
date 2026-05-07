@@ -133,21 +133,27 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
       style="flex:1;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;font-family:inherit"
       oninput="saveKitchen()">
   </div>
-  <div style="display:flex;align-items:center;gap:8px">
+  <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
     <span style="font-size:11px;color:var(--mu);white-space:nowrap">ผู้รายงาน</span>
     <input id="kitchenReporter" type="text" placeholder="ชื่อพนักงานครัว"
       style="flex:1;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:12px;font-family:inherit"
       oninput="saveKitchenReporter()">
   </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+    <span style="font-size:11px;color:var(--mu);white-space:nowrap">รหัส PIN</span>
+    <input id="kitchenPin" type="password" inputmode="numeric" maxlength="4" placeholder="••••"
+      style="width:80px;padding:6px 10px;background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--cr);font-size:16px;font-weight:700;text-align:center;letter-spacing:4px;font-family:inherit">
+    <span id="kitchenPinStatus" style="font-size:11px;color:var(--mu)"></span>
+  </div>
 </div>
 
 <div class="tabs">
   <div class="tab active" onclick="switchTab('prod')">09:30 ผลิต</div>
-  <div class="tab" onclick="switchTab('stock')">11:00 เช็คสต็อก</div>
-  <div class="tab" onclick="switchTab('dough')">16:00 แป้งดิบ</div>
+  <div class="tab" onclick="switchTab('dough')">12:00 แป้งดิบ</div>
+  <div class="tab" onclick="switchTab('prod2')">16:30 รอบ 2</div>
+  <div class="tab" onclick="switchTab('stock')">17:00 เช็คสต็อก</div>
 </div>
 
-<!-- ═══════════════ PAGE: ผลิต ═══════════════ -->
 <div class="page active" id="page-prod">
 
   <div class="strip">
@@ -167,25 +173,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 </div>
 
-<!-- ═══════════════ PAGE: วัตถุดิบ ═══════════════ -->
-<div class="page" id="page-stock">
-  <div style="padding:10px 8px 4px">
-    <div class="add-wrap" style="padding:0 0 8px">
-      <input class="add-in" id="ingInput" placeholder="เช่น เนยสด · ไข่ไก่ · น้ำมัน" onkeydown="if(event.key==='Enter')addIng()">
-      <button class="add-btn" onclick="addIng()">+ เพิ่ม</button>
-    </div>
-  </div>
-  <div class="ing-list" id="ingList">
-    <div class="empty" id="ingEmpty">ยังไม่มีรายการ — เพิ่มวัตถุดิบด้านบนได้เลย</div>
-  </div>
-</div>
-
-<!-- ═══════════════ PAGE: แป้งดิบ ═══════════════ -->
 <div class="page" id="page-dough">
   <div style="padding:10px 12px 4px">
-    <div style="font-size:11px;color:var(--mu);margin-bottom:10px;line-height:1.6">
-      กรอกจำนวนแป้งดิบที่เหลืออยู่ ณ เวลา 16:00 แยกตามสีสติกเกอร์บนลัง
-    </div>
+
   </div>
 
   <div class="sh">แป้งกลม (ไส้)<span class="sb" style="background:var(--ok-s);color:var(--ok)">3 สต็อก</span></div>
@@ -273,6 +263,33 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 </div>
 
+<div class="page" id="page-prod2">
+  <div style="padding:10px 12px 4px">
+    <div style="font-size:11px;color:var(--mu);line-height:1.6;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 12px;margin-bottom:8px">
+      บันทึกการผลิตเพิ่มเติม รอบ 2 (ถ้ามี) · ใส่เฉพาะรสที่ผลิตเพิ่มในรอบนี้
+    </div>
+  </div>
+  <div class="sh">ผลิตเพิ่ม — รอบ 2<span class="sb" style="background:var(--wa-s);color:var(--wa)">กรอกเฉพาะที่ผลิตเพิ่ม</span></div>
+  <div class="fl" id="prod2List"></div>
+  <div style="margin:10px 8px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 13px">
+    <div style="font-size:11px;font-weight:600;color:var(--gr-l);margin-bottom:6px">สรุปรอบ 2</div>
+    <div style="font-size:18px;font-weight:700;color:var(--gr-ll)" id="prod2Total">0</div>
+    <div style="font-size:10px;color:var(--mu)">ชิ้นที่ผลิตเพิ่มในรอบนี้</div>
+  </div>
+</div>
+
+<div class="page" id="page-stock">
+  <div style="padding:10px 8px 4px">
+    <div class="add-wrap" style="padding:0 0 8px">
+      <input class="add-in" id="ingInput" placeholder="เช่น เนยสด · ไข่ไก่ · น้ำมัน" onkeydown="if(event.key==='Enter')addIng()">
+      <button class="add-btn" onclick="addIng()">+ เพิ่ม</button>
+    </div>
+  </div>
+  <div class="ing-list" id="ingList">
+    <div class="empty" id="ingEmpty">ยังไม่มีรายการ — เพิ่มวัตถุดิบด้านบนได้เลย</div>
+  </div>
+</div>
+
 <!-- ACTIONS -->
 <div class="acts">
   <button class="btn btn-m" onclick="openRpt()">ส่งรายงาน</button>
@@ -296,7 +313,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div class="toast" id="toast"></div>
 
 <script>
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbwfpMz6QHsm_mIMxgSyppgte0Qg0YMx7Fr16VZ6SlHLC6GL-x1XScRSZBfmqBjzPfhs/exec";
+var SHEETS_URL = "YOUR_WEB_APP_URL_HERE";
 
 // ── MENUS ─────────────────────────────────────────────────────────
 var MENUS = {
@@ -382,10 +399,11 @@ setInterval(tick,15000);
 function switchTab(tab){
   curTab=tab;
   document.querySelectorAll(".tab").forEach(function(t,i){
-    t.classList.toggle("active",["prod","stock","dough"][i]===tab);
+    t.classList.toggle("active",["prod","dough","prod2","stock"][i]===tab);
   });
   document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
   el("page-"+tab).classList.add("active");
+  if(tab==="prod2") renderProd2();
 }
 
 function onDough(){
@@ -476,6 +494,39 @@ var LEVELS = [
   {id:"no", lbl:"ไม่ต้องเติม",        cls:"no"},
 ];
 
+function renderProd2(){
+  var list = el("prod2List");
+  if(!list) return;
+  list.innerHTML="";
+  var items = all_menus_kitchen();
+  items.forEach(function(item){
+    var val = S.prod2 ? (S.prod2[item.id]||"") : "";
+    var c=document.createElement("div");
+    c.className="fc";
+    c.innerHTML=
+      '<div class="fdot" style="background:'+item.color+'"></div>'+
+      '<div class="fi"><div class="fn">'+item.name+'</div><div class="fm">฿'+item.price+' · '+item.type+'</div></div>'+
+      '<input class="prod-in" type="number" inputmode="numeric" value="'+val+'" placeholder="0"'+
+        ' oninput="onProd2(this)" data-id="'+item.id+'">';
+    list.appendChild(c);
+  });
+}
+
+function onProd2(inp){
+  var id=inp.dataset.id||"";
+  if(!id) return;
+  if(!S.prod2) S.prod2={};
+  S.prod2[id]=parseInt(inp.value)||0;
+  save();
+  var total=0;
+  Object.keys(S.prod2).forEach(function(k){total+=parseInt(S.prod2[k])||0;});
+  var t=el("prod2Total");if(t) t.textContent=total;
+}
+
+function all_menus_kitchen(){
+  return MENUS.core.concat(MENUS.rotating).concat(MENUS.drop);
+}
+
 function renderIngs(){
   var list = el("ingList");
   list.innerHTML = "";
@@ -525,7 +576,17 @@ function setLevel(idx, levelId){
 }
 
 // ── REPORT ────────────────────────────────────────────────────────
+var CORRECT_PIN = "8313";
+
 function openRpt(){
+  var pin=el("kitchenPin")?el("kitchenPin").value:"";
+  if(pin!==CORRECT_PIN){
+    var ps=el("kitchenPinStatus");
+    if(ps){ps.textContent="รหัสไม่ถูกต้อง";ps.style.color="#C04040";}
+    toast("กรุณาใส่รหัส PIN ให้ถูกต้อง");
+    return;
+  }
+  var ps=el("kitchenPinStatus");if(ps){ps.textContent="✓";ps.style.color="#4A8C5A";}
   var d = el("liveDate").textContent;
   var t = el("liveTime").textContent;
   el("moSub").textContent = getKitchen()+(getKitchenReporter()?" · "+getKitchenReporter():"")+" · "+d+" · "+t;
@@ -622,6 +683,7 @@ function openRpt(){
       date: d, time: t,
       totalProduced: total,
       production: S.prod,
+      production2: S.prod2||{},
       ingredients: S.ings,
       dough: {
         df_yellow: parseInt(_dough.df_yellow)||0,
@@ -634,7 +696,7 @@ function openRpt(){
     };
     fetch(SHEETS_URL,{method:"POST",mode:"no-cors",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(payload)
+      body:JSON.stringify(Object.assign({key:'8313'},payload))
     }).catch(function(){});
   }
 }
